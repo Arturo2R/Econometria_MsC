@@ -4,37 +4,56 @@ Econometría-Maestría en Economía Uninorte-2022
 
 ## Descripción
 
-La inferencia causal tiene que ver con determinar el efecto independiente de un evento o elección sobre un resultado de interés. En nuestro caso, a partir del uso de datos observacionales queremos determinar si el cambio en una variable $x$ causa un cambio en otra variable, $y$. Además de la existencia de la relación, nos interesa la magnitud del efecto. Trabajaremos con estructuras de datos de corte transversal y de panel de datos. Nuestro punto de partida es el modelo de regresión lineal y el estimador MCO. Veremos bajo que circunstancias los parámetros estimados con MCO tienen una interpretación causal, y los métodos disponibles para cuando estas circunstancias no son plausibles.
+La inferencia causal tiene que ver con determinar el efecto independiente de un evento o elección sobre un resultado de interés. En nuestro caso, a partir del uso de datos observacionales queremos determinar si el cambio en una variable **x** causa un cambio en otra variable, **y**. Además de la existencia de la relación, nos interesa la magnitud del efecto. Trabajaremos con estructuras de datos de corte transversal y de panel de datos. Nuestro punto de partida es el modelo de regresión lineal y el estimador MCO. Veremos bajo que circunstancias los parámetros estimados con MCO tienen una interpretación causal, y los métodos disponibles para cuando estas circunstancias no son plausibles.
 
 ## *Contenido y plan de clase*
 
 ## Sesión 1 (4h)
 ### La idea de causalidad
-#### Expectativa condicional
-#### Resultados potenciales
+
+- Heckman, J., 2008, Econometric causality, *International Statistical Review*, 76(1):1-27
+
+- Hoover, K., 2008, Causality in economics and econometrics, *The New Palgrave Dictionary of Economics*, 2nd edition
+
+
+#### Expectativa condicional: W Cap. 2, H Cap. 2, 
+
+#### Resultados potenciales: M Cap. 4
 
 ## Sesión 2 (8h)
+
 ### Estimador MCO
-#### Propiedades en muestras finitas
-#### Propiedades asintóticas
+
+#### Propiedades en muestras finitas: H Cap. 4, E Cap. 13
+
+#### Propiedades asintóticas: H Cap. 7, W. Cap. 4, E Cap. 13
 
 ## Sesión 3 (4h)
+
 ### Endogeneidad y variables instrumentales
-#### Qué ocasiona la endogeneidad
-#### Estimador IV
+
+#### Qué ocasiona la endogeneidad: W Cap. 5, H Cap. 12, E Cap. 19, M Cap. 7
+
+#### Estimador IV: W Cap. 5, H Cap. 12
 
 ## Sesión 4 (8h)
+
 ### Endogeneidad y variables instrumentales
-#### Múltiples instrumentos, estimador 2SLS
-#### El problema de insrumentos débiles
+
+#### Múltiples instrumentos, estimador 2SLS: W Cap. 5, H Cap. 12
+
+#### El problema de insrumentos débiles: W Cap. 5, H Cap. 12
 
 ## Sesión 5 (4h)
+
 ### Panel de datos
-#### Efectos fijos y efectos aleatorios
+
+#### Efectos fijos y efectos aleatorios: H Cap. 17, W Cap. 10, M Cap. 8
 
 ## Sesión 6 (8h)
-### Panel de datos
-#### Diferencias en diferencias
+
+### Diferencias en diferencias: H Cap. 18, M Cap. 9, E Cap. 18
+
 
 ## *Evaluación*
 
