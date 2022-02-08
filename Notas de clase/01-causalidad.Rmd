@@ -1,0 +1,69 @@
+---
+title: 'La idea de causalidad'
+author: "Andrés Vargas"
+date: "28/01/2022"
+output: rmdformats::downcute
+bibliography: refeconometria.bib
+link-citations: true
+---
+
+```{r setup_prog, include = FALSE, cache = FALSE}
+knitr::opts_chunk$set(
+  comment = NA, 
+  warning = FALSE, 
+  message = FALSE
+    )
+library(fontawesome)
+here::i_am("Notas de clase/01-causalidad.Rmd")
+library(here)
+here()
+```
+
+# Objetivo de la sesión
+
+Estudiaremos la idea de causalidad predominante en la investigación empírica en economía, para luego analizar las condiciones bajo las cuales las técnicas econométricas nos permiten estimar parámetros cuya interpretación sea causal, en situaciones en las que nuestros datos son de tipo observacional.
+
+# La idea de causalidad
+
+¿Qué hace qué las cosas pasen? ¿Qué explica el cambio? La noción de causalidad que nos interesa tiene que ver con la idea de variación controlada. Si $Y$ es el resultado de interés y $X$ la intervención, entonces decimos que $X$ causa a $Y$ si al cambiar $X$, manteniendo todo lo demás que afecta a $Y$constante, cambia $Y$. Si bien esta noción está enmarcada dentro de un paradigma experimental, debe tenerse en cuenta que en muchas ocasiones trabajamos con estructuras de datos que no han disdo obtenidas a partir de un experimento controlado. Es decir, que la variable de intervención $X$ no fue manipulada por el investigador para observar su efcto sobre $Y$. Así, aunque en nuestros datos hay variación $X$ y de $Y$, no podemos discernir fácilmente si la una cambia como consecuencia de la otra.
+
+La idea de causalidad que nos conscierne también puede entenderse a partir de lo que se conoce como el modelo de efectos potenciales. Por ejemplo, si $X$ es la causa hipotética de $Y$, entonces al manipular el valor de $X$ podemos modificar el valor de $Y$. Si cambiamos el valor de $X$ de $x_1$ a $x_2$, entonces una medida del impacto de $X$ sobre $Y$ consiste en comparar el valor de $Y$ bajo $x_2$, $y_2$, con el valor de $Y$ bajo $x_1$, $y_1$. Sin embargo, si $X$ cambia entonces observamos $y_2$, pero el valor de $Y$ en ausencia del cambio, $y_1$, no es observado. Así, para poder hacer la inferencia causal necesitamos una hipótesis sobre que habría ocurrido con $Y$ sin $X$ no cambia. A esto lo llamamos *contrafactual*. De acuerdo a @heckman2008econometric la inferencia causal debe distinguir tres problemas
+
+1. Definir el contrafactual
+
+2. Identificar modelos causales de una población idealizada. Esto es, como si tuvieramos muestras infinitas sin variabilidad muestral
+
+3. Identificar modelos causales a partir de los datos, donde la variabilidad muestral es un asunto
+
+Si la econometría la entendemos como una herramienta para responder preguntas, entonces las cuestiones que podemos abarcar bajo esta lógica corresponden al análisis del impacto de una política o decisión sobre un resultado específico. Por ejemplo, el impacto de las transferencias en efectivo sobre la oferta de trabajo, el impacto del tamaño de la clase sobre el aprendizaje de los estudiantes.
+
+# La función de expectativa condicional
+
+De manera general podemos decir que los métodos econométricos estiman la media condicional de una variable, que llamamos dependiente, dado un conjunto de otras variables, regresores o covariables o variables independientes. 
+
+```{r,echo=FALSE}
+library(ggplot2)
+library(dplyr)
+library(ggpubr)
+load(here("Data","wagew.rda"))
+wagew<-wagew%>%filter(impa>100000)
+wbase<-ggplot(wagew,aes(x=impa/1000000))+geom_density(adjust=10,alpha=.2, fill="blue")+
+labs(title="Distribución del ingreso laboral",x="Ingreso laboral, millones de pesos",fill="",caption="GEIH 2019")+theme(legend.position="bottom")+coord_cartesian(xlim=c(0.1,5))+theme_minimal()
+lwbase<-ggplot(wagew,aes(x=log(impa/1000000)))+geom_density(adjust=10)+
+labs(title="Distribución del ingreso laboral",x="Log Ingreso laboral",fill="",caption="GEIH 2019")+theme(legend.position="bottom")+theme_minimal()
+ggarrange(wbase, lwbase)
+```
+
+
+```{r}
+wagew<-wagew%>%mutate(gender=ifelse(p6020==1,"Hombre","Mujer"))
+ggplot(wagew,aes(x=log(impa/1000000),fill=gender))+geom_density(alpha=0.4,adjust=10)+
+         labs(title="Distribución del ingreso laboral",x="Log Ingreso laboral",
+              fill="",caption="GEIH 2019")+theme(legend.position="bottom")
+```
+
+
+
+# El modelo de resultados potenciales
+
+# Referencias
