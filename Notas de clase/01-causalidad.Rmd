@@ -37,16 +37,25 @@ La idea de causalidad que nos conscierne también puede entenderse a partir de l
 
 Si la econometría la entendemos como una herramienta para responder preguntas, entonces las cuestiones que podemos abarcar bajo esta lógica corresponden al análisis del impacto de una política o decisión sobre un resultado específico. Por ejemplo, el impacto de las transferencias en efectivo sobre la oferta de trabajo, el impacto del tamaño de la clase sobre el aprendizaje de los estudiantes.
 
-# La función de expectativa condicional
+# Expectativa condicional
 
 De manera general podemos decir que los métodos econométricos estiman la media condicional de una variable, que llamamos dependiente, dado un conjunto de otras variables, regresores o covariables o variables independientes. 
 
-```{r,echo=FALSE}
+Por ejemplo, si estamos interesados en estudiar los ingreso laborales debemos tener en cuenta que estos varían entre personas, luego para describirlos usamos una función de distribución de probabilidad
+
+\begin{equation}
+F(y)=P(Ingreso\leq y)
+\end{equation}
+
+Para un individuo particular decimos que el ingreso es aleatorio. Antes de medirlo no sabemos cuanto es, pero suponemos que proviene de la distribución de probabilidad anterior. Así, las mediciones las consideramos como realizaciones de $F$. En la gráfica siguiente se puede apreciar la función de densidad para los ingresos y el logaritmo de los ingresos para los empleados colombianos en el año 2019
+
+
+```{r,echo=FALSE,message=FALSE, warning=FALSE}
 library(ggplot2)
 library(dplyr)
 library(ggpubr)
 load(here("Data","wagew.rda"))
-wagew<-wagew%>%filter(impa>100000)
+wagew<-wagew%>%filter(impa>100000)%>%mutate(limpa=log(impa))
 wbase<-ggplot(wagew,aes(x=impa/1000000))+geom_density(adjust=10,alpha=.2, fill="blue")+
 labs(title="Distribución del ingreso laboral",x="Ingreso laboral, millones de pesos",fill="",caption="GEIH 2019")+theme(legend.position="bottom")+coord_cartesian(xlim=c(0.1,5))+theme_minimal()
 lwbase<-ggplot(wagew,aes(x=log(impa/1000000)))+geom_density(adjust=10)+
@@ -55,6 +64,26 @@ ggarrange(wbase, lwbase)
 ```
 
 
+La media del ingreso $E(ingreso)=\$1.56$ millones y la media del logaritmo del ingreso $E(log(ingreso))$=13.98, es decir $\$1,184,107$. Dado que el ingreso tiene una distribución asimétrica y la media aritmética es sensible a las perturbaciones en las colas de la distribución, la media del logaritmo es una mejor medida de tendencia central ^[Equivale a la media geométrica]. Ahora, si queremos conocer la media de log ingreso para las mujeres entonces lo que calculamos es una media condicional 
+
+$$
+E(log(ingreso)|Género=Mujer)=13.96
+$$
+
+y para el los hombres
+
+$$
+E(log(ingreso)|Género=Hombre)=14
+$$
+
+Como observamos en la gráfica, no parece haber una diferencia importante entre hombres y mujeres. Si calculamos
+
+$$
+E(log(ingreso)|Género=Hombre)-E(log(ingreso)|Género=Mujer)=0.04
+$$
+
+Lo que interpretariamos como que el ingreso promedio de las mujeres es $4\%$ más bajo que el de los hombres
+
 ```{r}
 wagew<-wagew%>%mutate(gender=ifelse(p6020==1,"Hombre","Mujer"))
 ggplot(wagew,aes(x=log(impa/1000000),fill=gender))+geom_density(alpha=0.4,adjust=10)+
@@ -62,8 +91,130 @@ ggplot(wagew,aes(x=log(impa/1000000),fill=gender))+geom_density(alpha=0.4,adjust
               fill="",caption="GEIH 2019")+theme(legend.position="bottom")
 ```
 
+## La función de expectativa condicional
 
+Decimos que $Y$ es una variable aleatoria y $X=(X_1,X_2,...,X_k)$ un vector de variables aleatorias explicativas. Si $E(|Y|)<\infty$ entonces hay una función $\mu:\mathbb{R}^k \to \mathbb{R}$ tal que
+
+\begin{equation}
+\tag{1}
+E(Y|X_1,X_2,...,X_k)=\mu(X_1,X_2,...,X_k)
+\end{equation}
+
+A esto lo llamamos la función de expectativa condicional y nos determina como cambia el valor medio de $Y$ cuando cambian los elementos de $X$. 
+
+Definimos el error de la expectativa condicional como la diferencia entre $Y$ y el valor de la función de expectativa condicional evaluada en $X$
+
+\begin{equation}
+\tag{2}
+e=Y-\mu(X)
+\end{equation}
+
+Luego por construcción
+
+\begin{equation}
+\tag{2}
+Y=\mu(X)+e
+\end{equation}
+
+También, por construcción, tenemos que la expectativa condicional del error es cero
+
+\begin{align}
+E(e|X)&=E(Y-\mu(X)|X)\\
+&=E(Y|X)-E(\mu(X)|X)\\
+&=\mu(X)-\mu(X)\\
+&=0
+\end{align}
+
+Y al usar la ley de expectativas iteradas, $E(E(Y|X))=E(Y)$ tenemos que 
+
+\begin{equation}
+E(e)=E(E(Y|X))=E(0)=0
+\end{equation}
+
+Ahora, podemos especificar la función de expectativa condicional de la siguiente manera
+
+\begin{equation}
+\mu(X)=\beta_0+\beta_1X_1+\beta_2X_2+...+\beta_kX_k
+\end{equation}
+
+De donde podemos como cambios marginales en los regresores $X$ impactan en la expectativa condicional de la variable de resultado $Y$. Si la variable $X_1$ es continua, entonces
+
+\begin{equation}
+\dfrac{\partial E(Y|X)}{\partial{X_1}}=\beta_1
+\end{equation}
+
+Si la variable $X_1$ es discreta y toma los valores $0$ y $1$, entonces tenemos que
+
+\begin{equation}
+E(Y|X_1=1)-E(Y|X_1=0)=\beta_1
+\end{equation}
+
+En otras palabras, los parámetros recogen el cambio en la expectativa condicional de $Y$ atribuible a $X$, dado que todo lo demás está constante. Todo lo demás significa todas las demás variables explícitamente incorporadas en el modelo. Ahora, si usamos la forma lineal en $(2)$ tenemos que
+
+\begin{equation}
+Y=\beta_0+\beta_1X_1+\beta_2X_2+...+\beta_kX_k+u
+\end{equation}
+
+De donde podemos concluir que los parámetros capturan el cambio en el valor actual de $Y$ atribuible al cambio en la independiente, solo si el error $e$ no está afectado por el regresor que se modifica. Esto nos lleva a la discusión sobre efectos causales
 
 # El modelo de resultados potenciales
+
+Sea $Y$ la variable de resultado y $D$ la variable de tratamiento, que supondremos binaria, entonces podemos describir el impacto del tratamiento en el resultado a partir del siguiente modelo
+
+\begin{equation}
+\tag{3}
+Y=h(D,X,U)
+\end{equation}
+
+Donde $X$ es un conjunto de de covariables y $U$ recoge lo que no es observable. Se define el efecto causal de $D$ sobre $Y$ como
+
+\begin{equation}
+\tag{4}
+C(X,U)=h(1,X,U)-h(0,X,U)
+\end{equation}
+
+Este efecto es heterogéneo y aleatorio pues varía entre individuos, además, como lo mencionamos al inicio, para cada individuo solo observamos uno de los dos resultados posibles, $Y(0)$ o $Y(1)$. Lo que podemos hacer con nuestros datos es comparar a los individuos que estuvieron en el tratamiento con aquellos que no lo estuvieron. La cuestión es bajo que circunstancias esta comparación corresponde al efecto causal. Empecemos por definir el efecto causal promedio condicionado
+
+\begin{equation}
+\tag{5}
+ACE(x)=E(C(X,U)|X=x)=\int C(x,u)f(u|x)du
+\end{equation}
+
+Donde $f(u|x)$ es la densidad condicional de $U$ dado $X$. El efecto causal promedio incondicional sería
+
+\begin{equation}
+\tag{5}
+ACE=E(C(X,U))=\int ACE(x)f(x)dx
+\end{equation}
+
+Si suponemos que condicional en $X$ las variables aleatorias $D$ y $U$ son independientes, CIA, entonces podemos mostrar que el efecto parcial corresponde al efecto causal. Empecemos con la función de expectativa condicional
+
+\begin{align}
+\mu(d,x)&=E(Y|D=d,X=x)\\
+&=E(h(d,x,u)|D=d,X=x)\\
+&=\int h(d,x,u)f(u|x)du
+\end{align}
+
+Luego tenemos que bajo CIA $f(u|D,X)=f(u|x)$ y por lo tanto
+
+\begin{align}
+\mu(1,x)-\mu(0,x)&=\int h(1,x,u)f(u|x)du - \int h(0,x,u)f(u|x)du\\
+&=\int C(x,u)f(u|x)du\\
+&=ACE(x)
+\end{align}
+
+Veamos en el caso de la función de expectativa condicional lineal. 
+
+\begin{equation}
+Y=\alpha+\beta D+\gamma X+U
+\end{equation}
+
+De donde
+
+\begin{equation}
+E(Y|D=1,X=x)-E(Y|D=0,X=x)=\beta+E(U|X=x)-E(U|X=x)=\beta
+\end{equation}
+
+Lo anterior significa que si el componente no observable, error, es independiente de la variable de tratamiento después de condicionar en las otras variables, entonces el parámetro del modelo lineal es igual al efecto causal. En este sentido es que se justifica la estimación de la función de expectativa condicional. 
 
 # Referencias
