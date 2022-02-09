@@ -15,6 +15,7 @@ La inferencia causal tiene que ver con determinar el efecto independiente de un 
 
 - Hoover, K., 2008, Causality in economics and econometrics, *The New Palgrave Dictionary of Economics*, 2nd edition
 
+- [Notas de clase](https://raw.githack.com/andvarga-eco/Econometria_MsC/main/Notas%20de%20clase/01-causalidad.html)
 
 #### Expectativa condicional: W Cap. 2, H Cap. 2, 
 
