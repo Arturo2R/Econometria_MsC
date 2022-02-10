@@ -9,19 +9,22 @@ La inferencia causal tiene que ver con determinar el efecto independiente de un 
 ## *Contenido y plan de clase*
 
 ## Sesión 1 (4h)
+
+- [Notas de clase](https://raw.githack.com/andvarga-eco/Econometria_MsC/main/Notas%20de%20clase/01-causalidad.html)
+
 ### La idea de causalidad
 
 - Heckman, J., 2008, Econometric causality, *International Statistical Review*, 76(1):1-27
 
 - Hoover, K., 2008, Causality in economics and econometrics, *The New Palgrave Dictionary of Economics*, 2nd edition
 
-- [Notas de clase](https://raw.githack.com/andvarga-eco/Econometria_MsC/main/Notas%20de%20clase/01-causalidad.html)
-
 #### Expectativa condicional: W Cap. 2, H Cap. 2, 
 
 #### Resultados potenciales: M Cap. 4
 
 ## Sesión 2 (8h)
+
+- [Notas de clase](https://raw.githack.com/andvarga-eco/Econometria_MsC/main/Notas%20de%20clase/02-mco.html)
 
 ### Estimador MCO
 
@@ -58,8 +61,8 @@ La inferencia causal tiene que ver con determinar el efecto independiente de un 
 
 ## *Evaluación*
 
-### Taller 1: Entrega 11/02/2022
-### Taller 2: Entrega 4/03/2022
+### Taller 1: Entrega 26/02/2022
+### Taller 2: Entrega 5/03/2022
 
 
 ## *Bibliografía*
