@@ -120,7 +120,7 @@ Es un hecho reconocido que los estudiantes de colegios oficiales tienen, en prom
 
 <br/>
 
-Ingrese al repositorio y descargue la base [saber11at.fst](https://github.com/andvarga-eco/Econometria_MsC/blob/main/Data/saber11at.fst). Si tiene problemas para descargarla en este formato, también puede obtenerla en el catálogo del curso en formato csv. Una vez tenga la base en su equipo, carguela en R Studio usando la función *read.fst* o *read_csv*, según sea el caso.
+Ingrese al repositorio y descargue la base [saber11at.csv](https://github.com/andvarga-eco/Econometria_MsC/tree/main/Data). 
 
 
 ```{r,echo=FALSE, results=FALSE}
@@ -213,6 +213,7 @@ Estime el modelo
 $$
 punt\_global=\beta_0+\beta_1cole\_naturaleza+e
 $$
+
 <br/>
 
 - Interprete los resultados, en términos de dirección, magnitud, y significancia
@@ -250,7 +251,7 @@ align="c", digits=3)
 
 - Interptrete los resultados. Apoyese en literatura relacionada para darle más solidez a su interpretación
 
-<br\>
+<br/>
 
 # Aplicación: retornos a la educación en Colombia, 2019
 
@@ -269,6 +270,7 @@ Su propósito es estimar el retorno a la educación, en otras palabras, en cuán
 $$
 ln(w_i)=\alpha+\beta_1S_i+\beta_2Exp_i+\beta_3Exp^2+\gamma Mujer_i+e_i
 $$
+
 Donde 
 
 - $ln(w_i)$: logaritmo del ingreso laboral mensual

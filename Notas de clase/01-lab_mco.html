@@ -335,7 +335,7 @@ ggplot(coefs.df,aes(x=hat_beta_1))+geom_density(fill=&quot;lightblue&quot;,alpha
 <div id="cargar-y-organizar-los-datos" class="section level3" number="2.1.1">
 <h3 number="2.1.1"><span class="header-section-number">2.1.1</span> Cargar y organizar los datos</h3>
 <p><br /></p>
-<p>Ingrese al repositorio y descargue la base <a href="https://github.com/andvarga-eco/Econometria_MsC/blob/main/Data/saber11at.fst">saber11at.fst</a>. Si tiene problemas para descargarla en este formato, también puede obtenerla en el catálogo del curso en formato csv. Una vez tenga la base en su equipo, carguela en R Studio usando la función <em>read.fst</em> o <em>read_csv</em>, según sea el caso.</p>
+<p>Ingrese al repositorio y descargue la base <a href="https://github.com/andvarga-eco/Econometria_MsC/tree/main/Data">saber11at.csv</a>.</p>
 <pre class="r"><code># Escriba acá el código para cargar los datos</code></pre>
 <p><br /></p>
 </div>
@@ -414,7 +414,8 @@ align=&quot;c&quot;, digits=2)</code></pre>
 <p>Estime el modelo</p>
 <p><span class="math display">\[
 punt\_global=\beta_0+\beta_1cole\_naturaleza+e
-\]</span> <br /></p>
+\]</span></p>
+<p><br /></p>
 <ul>
 <li>Interprete los resultados, en términos de dirección, magnitud, y significancia</li>
 </ul>
@@ -454,7 +455,7 @@ punt\_global=\beta_0+\beta_1cole\_naturaleza+e
 <ul>
 <li>Interptrete los resultados. Apoyese en literatura relacionada para darle más solidez a su interpretación</li>
 </ul>
-<p>&lt;br&gt;</p>
+<p><br /></p>
 </div>
 </div>
 </div>
@@ -472,7 +473,8 @@ punt\_global=\beta_0+\beta_1cole\_naturaleza+e
 <p>Su propósito es estimar el retorno a la educación, en otras palabras, en cuánto aumenta el ingreso por cada año adicional de educación. Para ello plantea una ecuación de Mincer de la forma</p>
 <p><span class="math display">\[
 ln(w_i)=\alpha+\beta_1S_i+\beta_2Exp_i+\beta_3Exp^2+\gamma Mujer_i+e_i
-\]</span> Donde</p>
+\]</span></p>
+<p>Donde</p>
 <ul>
 <li><span class="math inline">\(ln(w_i)\)</span>: logaritmo del ingreso laboral mensual</li>
 <li><span class="math inline">\(S_i\)</span>: años de escolaridad</li>
