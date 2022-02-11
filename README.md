@@ -26,6 +26,8 @@ La inferencia causal tiene que ver con determinar el efecto independiente de un 
 
 - [Notas de clase](https://raw.githack.com/andvarga-eco/Econometria_MsC/main/Notas%20de%20clase/02-mco.html)
 
+- [Laboratorio](https://raw.githack.com/andvarga-eco/Econometria_MsC/main/Notas%20de%20clase/01-lab_mco.html)
+
 ### Estimador MCO
 
 #### Propiedades en muestras finitas: H Cap. 4, E Cap. 13
