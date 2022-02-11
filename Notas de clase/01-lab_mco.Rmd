@@ -1,0 +1,290 @@
+---
+title: "Lab R: Propiedades del estimador MCO"
+author: "Andrés Vargas"
+date: "12/08/2021"
+output:
+  html_document:
+    theme: flatly
+    toc: TRUE
+    toc_float: TRUE
+    toc_depth: 2
+    number_sections: TRUE
+---
+
+```{r setup_prog, include = FALSE, cache = FALSE}
+knitr::opts_chunk$set(
+  comment = NA, 
+  warning = FALSE, 
+  message = FALSE
+    )
+library(fontawesome)
+here::i_am("Notas de clase/01-lab_mco.Rmd")
+library(here)
+library(knitr)
+here()
+```
+
+
+# Simulación: distribución del estimador MCO
+
+Simulemos un proceso y veamos estas ideas de forma precisa. Digamos que la ecuación poblacional es 
+
+<br>
+
+\begin{equation}
+Y=5+2.5X_1+3X_2+e 
+\end{equation}
+
+<br>
+
+y que nuestra población es $N=10,000$. Como antes, supongamos que no conocemos el valor de los parámetros y los estimamos a partir de alguna muestra. Obtenemos muestras de tamaño $n=100$, aproximadamente. Lo que queremos ver es si nuestro procedimiento nos permite obtener los parámetros verdaderos. Simularemos $1000$ muestras
+
+<br>
+
+```{r}
+library(mvtnorm)
+N<-10000
+coefs<-cbind("hat_beta_1" = numeric(1000), "hat_beta_2" = numeric(1000)) #Vector que guardará los coeficientes
+set.seed(1) # permite reproducir los resultados
+X <- rmvnorm(N, c(50, 100), sigma = cbind(c(10, 2.5), c(2.5, 10))) # generamos X1 y X2
+e <- rnorm(N, sd = 5)
+Y <- 5 + 2.5 * X[, 1] + 3 * X[, 2] + e
+
+xdf<-data.frame(X,Y)
+
+nrsim<-1000 #obtenemos 1000 muestras de nuestra población
+for (i in 1:nrsim){
+dfs<-sample(c(TRUE,FALSE),nrow(xdf),replace=TRUE,prob=c(0.01,0.99)) #muestra aleatoria, n aprox 100
+dfs<-xdf[dfs,]
+ols<-lm(Y~X1+X2,data=dfs) #estimamos para cada muestra generada
+coefs[i,]<-coef(ols)[-1]  # el valor estimado de b1 y b2 en cada muestra se lleva al vector coefs
+} 
+
+coefs.df<-data.frame(coefs)
+
+```
+
+<br>
+
+Calculemos ahora el promedio de los valores estimados $\hat{\beta_1}$ y $\hat{\beta_2}$ 
+
+<br>
+
+```{r, message=FALSE, warning=FALSE}
+library(dplyr)
+
+msd<-coefs.df%>%summarise(b1m=mean(coefs.df$hat_beta_1),
+                          b2m=mean(coefs.df$hat_beta_2),
+                          b1sd=sd(coefs.df$hat_beta_1),
+                          b2sd=sd(coefs.df$hat_beta_1)
+                          )
+kable(msd,
+      caption="Promedio y desviación estándar de los estimadores", 
+col.names=c("Media b1", "Media b2", "SD b1", "SD b2"),
+align="c", digits=2)
+```
+
+<br>
+
+Veamos la distribución del estimador $\hat{\beta}_1$
+
+---
+
+```{r, message=FALSE, warning=FALSE}
+library(ggplot2)
+ggplot(coefs.df,aes(x=hat_beta_1))+geom_density(fill="lightblue",alpha=0.4)+
+  geom_vline(xintercept=mean(coefs.df$hat_beta_1),linetype=4)+theme_minimal()+
+  labs(title="Distribución del promedio del estimador",subtitle="1000 muestras diferentes",x=expression(beta[1]*estimado))           
+```
+
+---
+
+Con cada muestra se estima un valor diferente del parámetro de interés, pero si promediamos todas las estimaciones encontramos que $\dfrac{1}{1000}\sum_{i=1}^{1000}\hat{\beta}_{1i}=2.5$. Este es exactamente el valor del parámetro poblacional. Podemos decir entonces que nuestro estimador es insesgado. 
+
+<br>
+
+#### Ejercicio {-}
+
+Replique la actividad anterior, pero ahora varíe el tamaño de muestra: i) $n\approx50$; ii) $n\approx1000$. Compare la media y la desviación estándar del estimador ¿Qué puede concluir?
+
+
+# Aplicación: ¿La educación privada es mejor que la pública?
+
+Es un hecho reconocido que los estudiantes de colegios oficiales tienen, en promedio, un rendimiento inferior al de los colegios privados en pruebas estandarizadas. Usando datos de la prueba SABER11 de 2020 para el departamento del Atlántico, se examinará esta cuestión. En particular, se pretende responder la pregunta ¿Cuánto es el impacto de asistir a un colegio oficial sobre el puntaje en las pruebas SABER 11? En otras palabras, cuánto del diferencial de desempeño se puede atribuir a la naturaleza del colegio.
+
+<br/>
+
+## Procedimiento
+
+### Cargar y organizar los datos
+
+<br/>
+
+Ingrese al repositorio y descargue la base [saber11at.fst](https://github.com/andvarga-eco/Econometria_MsC/blob/main/Data/saber11at.fst). Si tiene problemas para descargarla en este formato, también puede obtenerla en el catálogo del curso en formato csv. Una vez tenga la base en su equipo, carguela en R Studio usando la función *read.fst* o *read_csv*, según sea el caso.
+
+
+```{r,echo=FALSE, results=FALSE}
+library(readr)
+library(fst)
+saber11<- read_csv(here("Data","saber11at.csv"))
+```
+
+```{r}
+# Escriba acá el código para cargar los datos
+
+```
+
+<br/>
+
+### Organización de los datos
+
+<br/>
+
+- Explore y familizaricese con la base de datos ¿Cuántas y cuáles variables tenemos? ¿De qué tipo son? ¿Cuáles son las que me interesan? ¿En que unidades están medidas mis variables de interés?
+
+```{r,results=FALSE}
+resumen_data <- function(df) {
+  data.frame(
+    col_name = colnames(df),
+    col_index = 1:ncol(df),
+    col_class = sapply(df, class),
+    row.names = NULL
+  )
+}
+resumen_data(saber11)
+
+```
+
+<br/>
+
+- Nuestra variable dependiente es **punt_global** y la variable explicativa de interés **cole_naturaleza**. Identifique y seleccione otras variables que usted crea que son importantes para explicar el puntaje global en la prueba
+
+```{r}
+library(dplyr)
+saber11s<-saber11%>%select(c(75,42,34,14,18,3))
+```
+
+<br/>
+
+### Análisis descriptivo
+
+<br/>
+
+- Calcule la media y la desviación estándar del puntaje global para los colegios oficiales y no oficiales
+
+<br/>
+
+```{r}
+library(knitr)
+mpunt<-saber11s%>%group_by(cole_naturaleza)%>%summarise(mpunt=mean(punt_global,na.rm=TRUE),
+                          sdpun=sd(punt_global,na.rm=TRUE)
+                          )
+kable(mpunt,
+      caption="Puntaje global: oficial y no oficial", 
+col.names=c("Naturaleza","Media", "SD"),
+align="c", digits=2)
+```
+
+<br/>
+
+- Compare la distribución del puntaje para los colegios oficiales y no oficiales. Use *ggplot* con *geom_density*
+
+<br/>
+
+```{r}
+# Escriba acá el código para realizar el gráfico
+```
+
+
+```{r,echo=FALSE}
+library(ggplot2)
+baseplot<-ggplot(saber11s,aes(x=punt_global,fill=cole_naturaleza))+geom_density(alpha=0.4)
+baseplot+labs(title="Puntaje global: distribución oficial y no oficial",x="Puntaje Global",fill="")+theme(legend.position="bottom")
+```
+
+<br/>
+
+### Estimación
+
+<br/>
+
+Estime el modelo
+
+$$
+punt\_global=\beta_0+\beta_1cole\_naturaleza+e
+$$
+<br/>
+
+- Interprete los resultados, en términos de dirección, magnitud, y significancia
+
+```{r}
+# Escriba acá el código para estimar el modelo base
+
+```
+
+```{r,echo=FALSE}
+library(xtable)
+mod1 <- lm(punt_global~cole_naturaleza, data=saber11s)
+smod1 <- data.frame(xtable(summary(mod1)))
+smod1%>%select(c(1,2,3))%>%
+kable( 
+caption="Modelo base", 
+col.names=c("Coefficient", "Std. Error", "t-value"),
+align="c", digits=3)
+
+```
+
+<br/>
+
+- ¿Diría usted que el estimador de $\beta_1$ es insesgado? Explique detalladamente su respuesta
+
+- Añada a la estimación las variables adicionales que seleccionó ¿Cómo cambia el parámetro estimado de su variable de interés?
+
+<br/>
+
+```{r}
+# Escriba acá el código para estimar el modelo ampliado
+
+```
+
+
+- Interptrete los resultados. Apoyese en literatura relacionada para darle más solidez a su interpretación
+
+<br\>
+
+# Aplicación: retornos a la educación en Colombia, 2019
+
+Ingrese a la carpeta Data en el repositorio y descargue la base de datos *wagew.rda*. Esta base contiene los datos de la GEIH 2019. La base tiene información para personas ocupadas cuya posición ocupacional es empleado de empresa particular o empleado del gobierno.  Contiene las siguientes variables
+
+- p6020: 1 hombre, 2 mujer
+- p6040: edad en años
+- p6210: nivel educativo más alto alcanzado. 1 ninguno, 3 primaria, 4 básica (6-9), 5 media (10-13), 6 superior o universitaria
+- p6210s1: último grado aprobado
+- impa: ingreso monetario mensual
+- sy: años de escolaridad
+
+
+Su propósito es estimar el retorno a la educación, en otras palabras, en cuánto aumenta el ingreso por cada año adicional de educación. Para ello plantea una ecuación de Mincer de la forma
+
+$$
+ln(w_i)=\alpha+\beta_1S_i+\beta_2Exp_i+\beta_3Exp^2+\gamma Mujer_i+e_i
+$$
+Donde 
+
+- $ln(w_i)$: logaritmo del ingreso laboral mensual
+- $S_i$: años de escolaridad
+- $Exp$: es la experiencia potencial en el mercado laboral, la cual se calcula como $edad-S_i-6$
+- $Mujer$: dummy que identifica a las mujeres
+
+1. Antes de realizar la estimación, lleve a cabo el siguiente análisis gráfico
+
+- Haga un gráfico de dispersión (*scatter*) donde tenga los años de escolaridad en el eje X y $ln(w)$ en el eje Y (use ggplot con geom_point). Interprete
+
+- En una gráfica superponga la distribución empírica, densidad, de $ln(w)$ para hombres y para $mujeres$. Interprete los resultados
+
+2. Realice la estimación del modelo y reporte los resultados en una tabla bien ordenada. Interprete los coeficientes en términos de dirección, magnitud y significancia^[Se sugiere revisar https://documents1.worldbank.org/curated/en/830831468147839247/pdf/WPS7020.pdf]
+
+3. ¿El coeficiente estimado $\hat{\beta_1}$ tiene interpretación causal? Explique. 
+
+
+
