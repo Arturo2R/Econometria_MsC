@@ -24,7 +24,7 @@ La inferencia causal tiene que ver con determinar el efecto independiente de un 
 
 ## Sesión 2 (8h)
 
-- [Notas de clase](https://github.com/andvarga-eco/Econometria_MsC/blob/main/Notas%20de%20clase/02-mco_prop.html)
+- [Notas de clase](https://raw.githack.com/andvarga-eco/Econometria_MsC/main/Notas%20de%20clase/02-mco_prop.html)
 
 - [Laboratorio](https://raw.githack.com/andvarga-eco/Econometria_MsC/main/Notas%20de%20clase/01-lab_mco.html)
 
